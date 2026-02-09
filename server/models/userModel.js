@@ -1,7 +1,7 @@
-const sequelize = require("../config/db");
+const sequelize = require("../config/db.js");
 const {Sequelize} = require('sequelize');
 
-const User = sequelize.define({
+const User = sequelize.define("user", {
     id : {
         type : Sequelize.INTEGER,
         primaryKey : true,
