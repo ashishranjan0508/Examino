@@ -1,4 +1,4 @@
-const sequelize = require("..config/db.js");
+const sequelize = require("../config/db.js");
 const Sequelize = require("sequelize");
 
 const User = require("./userModel");
@@ -7,62 +7,41 @@ const Option = require("./mcqOptionModel");
 const Answer = require("./answerModel");
 const Question = require("./questionModel");
 
-// Association b/w user(teacher and exam)
+// User (Teacher) → Exam
+User.hasMany(Exam, {foreignKey: 'teacherId', onDelete: 'CASCADE'});
+Exam.belongsTo(User, { foreignKey: 'teacherId', as: 'teacher'});
 
-User.hasMany('Exam', {
-   foreignKey : 'teacherId',
-   onDelete: 'CASCADE'});
-Exam.belongsTo('User', {foreignKey : 'teacherId', as : 'teacher'});
+// Exam → Question
+Exam.hasMany(Question, {foreignKey: 'examId',onDelete: 'CASCADE'});
+Question.belongsTo(Exam, {foreignKey: 'examId'});
 
-//Association b/w Exam and Question
+// Exam → Answer
+Exam.hasMany(Answer, {foreignKey: 'examId', onDelete: 'CASCADE'});
+Answer.belongsTo(Exam, {foreignKey: 'examId'});
 
-Exam.hasMany('Question', {
-   foreignKey : 'examId',
-   onDelete: 'CASCADE'});
-Question.belongsTo('Exam', {foreignKey : 'examId'});
+// Student (User) → Answer
+User.hasMany(Answer, {foreignKey: 'studentId', onDelete: 'CASCADE'});
+Answer.belongsTo(User, {foreignKey: 'studentId',as: 'student'});
 
-// Association b/w Exam and Answer 
+// Question → Option
+Question.hasMany(Option, {foreignKey: 'questionId',onDelete: 'CASCADE'});
+Option.belongsTo(Question, {foreignKey: 'questionId'});
 
-Exam.hasMany('Answer', {
-   foreignKey : 'ExamId',
-   onDelete: 'CASCADE'});
-Answer.belongsTo('Exam', {foreignKey : 'ExamId'});
+// Question → Answer
+Question.hasMany(Answer, {foreignKey: 'questionId',onDelete: 'CASCADE'});
+Answer.belongsTo(Question, {foreignKey: 'questionId'});
 
-// Association b/w Student and answer
- User.hasMany('Answer', {
-   foreignKey : 'studentId',
-   onDelete: 'CASCADE'});
- Answer.belongsTo('User', {foreignKey : 'stuedentId', as : 'student'});
+// Option → Answer
+Option.hasMany(Answer, {foreignKey: 'selectedOptionId',onDelete: 'CASCADE'});
+Answer.belongsTo(Option, {foreignKey: 'selectedOptionId',as: 'selectedOption'});
 
- //Association b/w Question to option
+module.exports = {
+  sequelize,
+  Sequelize,
+  User,
+  Exam,
+  Option,
+  Answer,
+  Question
+};
 
- Question.hasMany('Option', {
-   foreignKey : 'questionId',
-   onDelete: 'CASCADE'});
- Option.belongsTo('Question', {foreignKey : 'questionId'});
-
- // Association b/w Question and Answer
-
- Question.hasMany(Answer, {
-   foreignKey: 'questionId',
-   onDelete: 'CASCADE'});
- Answer.belongsTo(Question, {foreignKey: 'questionId'});
-
- // Association b/w option an Answer
-
- Option.hasMany(Answer, {
-   foreignKey: 'selectedOptionId',
-   onDelete: 'CASCADE'});
- Answer.belongsTo(Option, {foreignKey: 'selectedOptionId', as: 'selectedOption'});
-
- const db = {
-    sequelize,
-    Sequelize,
-    User,
-    Exam,
-    Option,
-    Answer,
-    Question,
- };
-
- module.exports = db;

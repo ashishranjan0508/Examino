@@ -25,9 +25,11 @@ const User = sequelize.define("user", {
         allowNull : false,
     },
 
-    userRoll : {
+    userRole : {
         type : Sequelize.ENUM('teacher', 'student'),
         defaultValue : 'student',
         allowNull : false,
     }
 });
+
+module.exports = User;

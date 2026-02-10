@@ -1,14 +1,12 @@
 const express = require('express');
 const cors = require('cors');
-const dotenv = require('dotenv');
+require('dotenv').config();
 //const usersRoutes = 
-
-dotenv.config();
 
 const app = express();
 
 const allowedOrigins = [
-  process.env.FRONTEND_URL,
+  //process.env.FRONTEND_URL,
   'http://localhost:5173',
   'http://localhost:5174'
 ];
