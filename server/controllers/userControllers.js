@@ -7,20 +7,23 @@ const jwt = require("jsonwebtoken");
 
 const registerUser = async (req, res) => {
     try {
-        const { name, email, password, userRole } = req.body; 
-
-        if (!name || !email || !password) {
+        const { name, email, password,  studentRollNo, userRole } = req.body;
+       
+        if (!name || !email || !password || !userRole) {
             return res.status(400).json({ success: false, message: "All fields are required" });
         }
-
-        if (password.length <= 8 || password.length > 20) {
+ 
+        if (password.length < 6 || password.length > 20) {
+      
             return res.status(400).json({                                         
                 success: false,
-                message: "Password must be between 8 and 20 characters"
+                message: "Password must be between 6 and 20 characters"
             });
+       
         }
 
         const existingUser = await User.findOne({ where: { email } });
+     
         if (existingUser) {
             return res.status(409).json({ success: false, message: "User already exists" }); 
         }
@@ -28,25 +31,31 @@ const registerUser = async (req, res) => {
 
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
-
+  
         const newUser = await User.create({
             name,
             email,
+            studentRollNo,
             password: hashedPassword,
             userRole: userRole || 'student'
         });
-
+  
         const token = jwt.sign(
-            { id: newUser.id, role: newUser.userRole },
-            process.env.JWT_SECRET,
-            { expiresIn: "1h" }
+            { id: newUser.id, userRole: newUser.userRole},
+            process.env.JWT_SECRET, 
+            { expiresIn: "5h" }
         );
 
         return res.status(201).json({
             success: true,
             message: "User registered successfully",
             token,
-            user: { id: newUser.id, name: newUser.name, role: newUser.userRole } // details for frontend
+            user: { // details for frontend 
+              id: newUser.id, 
+              name: newUser.name, 
+              studentRollNo: newUser.studentRollNo,
+               userRole: newUser.userRole
+               } 
         });
 
     } catch (error) {
@@ -55,40 +64,55 @@ const registerUser = async (req, res) => {
     }
 };
 
+
+
+
+
+
+
 // Controller for User Login ------------------------------------------------>>>>>>>>>>>>>>>>
 
 const loginUser = async (req, res) => {
+  console.log("This is our secret", process.env.JWT_SECRET);
     try {
         const { email, password } = req.body;
-
+        console.log("Bug catcher in login 1")
         if (!email || !password) {
+          console.log("Bug catcher in login 2")
             return res.status(400).json({ success: false, message: "Email and password are required" });
         }
 
         const existingUser = await User.findOne({ where: { email } });
-        
+        console.log("Bug catcher in login 3");
         if (!existingUser) {
+          console.log("Bug catcher in login 4");
             return res.status(401).json({ success: false, message: "Invalid email or password" });
         }
-
+        console.log("Bug catcher in login 5");
         const isMatch = await bcrypt.compare(password, existingUser.password);
         
         if (!isMatch) {
+            console.log("Bug catcher in login 6");
             return res.status(401).json({ success: false, message: "Invalid email or password" });
         }
-
+        console.log("Bug catcher in login 7")
         const token = jwt.sign(
-            { id: existingUser.id, role: existingUser.userRole },
+            { id: existingUser.id, userRole: existingUser.userRole},
             process.env.JWT_SECRET,
-            { expiresIn: "1h" }
+            { expiresIn: "5h" }
         );
-
+        console.log("Bug catcher in login 8")
         return res.status(200).json({
             success: true,
             message: "Login successful",
             token,
-            user: { id: existingUser.id, name: existingUser.name, role: existingUser.userRole }
-        });
+            user: { 
+               id: existingUser.id,
+               name: existingUser.name, 
+               studentRollNo: existingUser.studentRollNo,
+               userRole: existingUser.userRole 
+              }
+           });
 
     } catch (error) {
         console.error("Error logging in user:", error);
