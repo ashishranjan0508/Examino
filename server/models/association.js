@@ -35,6 +35,14 @@ Answer.belongsTo(Question, {foreignKey: 'questionId'});
 Option.hasMany(Answer, {foreignKey: 'selectedOptionId',onDelete: 'CASCADE'});
 Answer.belongsTo(Option, {foreignKey: 'selectedOptionId',as: 'selectedOption'});
 
+// Student -> Result
+User.hasMany(Result, { foreignKey: 'studentId' });
+Result.belongsTo(User, { foreignKey: 'studentId', as: 'student' });
+
+// Exam -> Result
+Exam.hasMany(Result, { foreignKey: 'examId' });
+Result.belongsTo(Exam, { foreignKey: 'examId', as: 'exam' });
+
 module.exports = {
   sequelize,
   Sequelize,

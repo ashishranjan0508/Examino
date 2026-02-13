@@ -1,7 +1,10 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
+
 const userRoutes = require('./routes/usersRoutes');
+const examRouter = require('./routes/examsRoutes');
+const questionRouter = require("./routes/questionRoutes.js");
 
 const app = express();
 
@@ -32,6 +35,8 @@ res.status(204).json({message : "Examino API is running successfully!"});
 
 //API will go hear---------------
 app.use('/api/users', userRoutes);
+app.use('/api/exams', examRouter);
+app.use('/api/questions', questionRouter);
 
 const PORT = process.env.PORT || 5000;
 
