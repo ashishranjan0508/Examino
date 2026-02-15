@@ -21,8 +21,8 @@ const registerUser = async (req, res) => {
             });
        
         }
-
-        const existingUser = await User.findOne({ where: { email } });
+        let normalizedEmail = email.toLowerCase().trim();
+        const existingUser = await User.findOne({ where: { email: normalizedEmail } });
      
         if (existingUser) {
             return res.status(409).json({ success: false, message: "User already exists" }); 
@@ -34,7 +34,7 @@ const registerUser = async (req, res) => {
   
         const newUser = await User.create({
             name,
-            email,
+            email: normalizedEmail,
             studentRollNo,
             password: hashedPassword,
             userRole: userRole || 'student'
@@ -54,7 +54,7 @@ const registerUser = async (req, res) => {
               id: newUser.id, 
               name: newUser.name, 
               studentRollNo: newUser.studentRollNo,
-               userRole: newUser.userRole
+              userRole: newUser.userRole
                } 
         });
 
@@ -79,7 +79,8 @@ const loginUser = async (req, res) => {
             return res.status(400).json({ success: false, message: "Email and password are required" });
         }
 
-        const existingUser = await User.findOne({ where: { email } });
+        let normalizedEmail = email.toLowerCase().trim();
+        const existingUser = await User.findOne({ where: { email: normalizedEmail } });
        
         if (!existingUser) {
           

@@ -6,6 +6,7 @@ const Exam = require("./examModel");
 const Option = require("./mcqOptionModel");
 const Answer = require("./answerModel");
 const Question = require("./questionModel");
+const Result = require("./resultModel.js");
 
 // User (Teacher) → Exam
 User.hasMany(Exam, {foreignKey: 'teacherId', onDelete: 'CASCADE'});
@@ -50,6 +51,7 @@ module.exports = {
   Exam,
   Option,
   Answer,
-  Question
+  Question,
+  Result
 };
 

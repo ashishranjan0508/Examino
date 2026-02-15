@@ -1,9 +1,9 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../config/db"); 
 
-const Result = Sequelize.define("result", {
+const Result = sequelize.define("result", {
     id: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },

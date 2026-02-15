@@ -14,7 +14,7 @@ const addQuestion = async (req, res) => {
              message: "Question must have question text and at least 2 options"
         });
      }
-     const exam = await Exam.findOne({where : {examId}});
+     const exam = await Exam.findOne({where : {id: examId}});
      if(!exam) {
         return res.status(400).json({ 
              success: false, 
@@ -59,18 +59,17 @@ const getQuestionsByExam = async (req, res) => {
     try{
         const {examId} = req.params;
         const userId = req.user.id;
-        const userRole = req.body.userRole;
 
-        const exam = await Exam.findOne({where: {examId}});
+        const exam = await Exam.findOne({where: {id: examId}});
         if(!exam) {
          return res.status(404).json({success: false, message: "Exam not found"});
         }
-
-        if(userRole === 'teacher' && exam.teacherId !== userId) {
-         return res.status(403).json({ message: "Unauthorized" });
+        const isTeacher = (exam.teacherId === userId);
+        if(!isTeacher && !exam.isLive) {
+         return res.status(403).json({ message: "Exam is not started yet please wait!" });
         }
 
-        const attributesToShow = (userRole === 'teacher') ? 
+        const attributesToShow = (isTeacher) ? 
         ['id', 'optionText', 'isCorrect'] :
         ['id', 'optionText'];
 
@@ -86,7 +85,7 @@ const getQuestionsByExam = async (req, res) => {
         return res.status(200).json({success: true, question});
     } catch(error) {
       console.error("The error in getQuestionsByExam: ", error);
-      return res.status(500).json({ message: "Server Error" });
+      return res.status(500).json({ message: "Internal Server Error" });
     }
 }
 
@@ -97,13 +96,13 @@ const deleteQuestion = async (req, res) => {
     try {
         const { questionId } = req.params;
         const userId = req.user.id;
-        const userRole = req.body.userRole;
+        const userRole = req.user.userRole;
 
-        const question = await Question.findOne({where: {questionId}});
+        const question = await Question.findOne({where: {id: questionId}});
         
         if (!question) return res.status(404).json({ message: "Question not found" });
 
-        const exam = await Exam.findOne({where: {examId : question.examId}});  // question.examId islye access kr paye kyu ki when we do association like 
+        const exam = await Exam.findOne({where: {id : question.examId}});  // question.examId islye access kr paye kyu ki when we do association like 
                                                                               //   Exam hasMany Questions then question table has a hiden column of examId
 
         if(userRole !== 'teacher'|| !exam || exam.teacherId !== userId) {
@@ -116,8 +115,8 @@ const deleteQuestion = async (req, res) => {
 
         return res.status(200).json({ success: true, message: "Deleted" });
     } catch (error) {
-        console.log("Error in DeleteQuestion inside questionController");
-        return res.status(500).json({ message: "Error" });
+        console.log("Error in DeleteQuestion inside questionController", error);
+        return res.status(500).json({ message: "Internal server Error" });
     }
 };
 
