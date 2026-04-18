@@ -55,7 +55,7 @@ const registerUser = async (req, res) => {
               name: newUser.name, 
               studentRollNo: newUser.studentRollNo,
               userRole: newUser.userRole
-               } 
+            } 
         });
 
     } catch (error) {
@@ -70,7 +70,7 @@ const registerUser = async (req, res) => {
 // Controller for User Login ------------------------------------------------>>>>>>>>>>>>>>>>
 
 const loginUser = async (req, res) => {
-  console.log("This is our secret", process.env.JWT_SECRET);
+  //console.log("This is our secret", process.env.JWT_SECRET);
     try {
         const { email, password } = req.body;
         
