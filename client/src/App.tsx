@@ -1,7 +1,20 @@
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Home from './pages/Home'
+import { ALL_ROUTES } from './config/route-config'
 
 
 const App = () => {
-  return <Home></Home>
+   return(
+  <BrowserRouter>
+     <Routes>
+      <Route path='/' element = {<Home/>}></Route>
+      {ALL_ROUTES.map(({path, Component, isProtected}) => {
+         <Route key={path} path='/path'></Route>
+      }
+   )}
+     </Routes>
+  </BrowserRouter>
+   )
+  
 }
 export default App
