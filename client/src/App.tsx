@@ -8,10 +8,9 @@ const App = () => {
   <BrowserRouter>
      <Routes>
       <Route path='/' element = {<Home/>}></Route>
-      {ALL_ROUTES.map(({path, Component, isProtected}) => {
-         <Route key={path} path='/path'></Route>
-      }
-   )}
+      {ALL_ROUTES.map(({path, Component, isProtected}) => (
+         <Route key={path} path={path} element = {<Component/>}></Route>
+      ))}
      </Routes>
   </BrowserRouter>
    )

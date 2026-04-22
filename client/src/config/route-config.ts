@@ -1,8 +1,8 @@
-import React, { lazy } from "react";
+import React, { lazy, Suspense } from "react";
 
 export interface RouteConfig {
     path: string;
-    Component: React.FC;
+    Component: React.ComponentType<any>;
     isProtected: boolean;
 }
 
