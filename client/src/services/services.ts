@@ -1,10 +1,11 @@
 
 import apiCall from "./apiHandler"
 import type { SignupFormData } from "../pages/Signup";
+import type { LoginFormData } from "../pages/Login";
 
 // Register user-------->>>>>>>
 
- const registerUserApi = (formData : SignupFormData) => {
+ export const registerUserApi = (formData : SignupFormData) => {
     const endpoint = '/users/register';
     const config = {
          method : "POST",
@@ -16,4 +17,19 @@ import type { SignupFormData } from "../pages/Signup";
 
     return apiCall(endpoint, config);
 }
- export default registerUserApi;
+
+
+ //login user----->>>
+
+ export const loginUserApi = (FormData : LoginFormData) => {
+       const endpoint = '/users/login';
+       const config = {
+            method : "POST",
+            headers : {
+                "Content-Type" : "application/json"
+            },
+            body : JSON.stringify(FormData)
+       };
+
+       return apiCall(endpoint, config);
+ }

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import registerUserApi from "../services/services";
+import {registerUserApi} from "../services/services";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Appbar from "../components/Appbar";
@@ -30,7 +30,7 @@ const Signup = () => {
         const result = await registerUserApi(formData);
         if(result.ok) {
          toast.success("Signup successful! Please login.");
-         // navigate("/login");
+         navigate("/login");
         } else {
          toast.error(result.error || "Signup failed!");
         }
@@ -155,7 +155,7 @@ const Signup = () => {
                     </form>
 
                     <span className="block text-center mt-6 text-gray-400">
-                        Already have an account? <Link to="/login" className="text-blue-400 hover:text-blue-300 hover:underline">Login here</Link>
+                        Already have an account? <Link to="/login" className="text-blue-400 hover:text-blue-300 hover:underline">Login</Link>
                     </span>
                 </div>
             </div>
